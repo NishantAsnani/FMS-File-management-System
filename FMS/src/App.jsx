@@ -1,10 +1,13 @@
 import Display from './Display'
-
+import Login from './Login'
+import Signup from './Signup'
 
 
 function App(){
   return(
-    <Display />
+    // <Signup/>
+    <Display/>
+    // <Login/>
   )
 }
 

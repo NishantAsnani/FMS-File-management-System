@@ -3,12 +3,13 @@ import "./App.css";
 import { Fragment } from "react";
 import pdfImage from "../public/pdf.png";
 import axios from 'axios'
-import base64 from 'base-64'
-import path from 'path'
+import { BrowserRouter, Routes, Route, RouterProvider } from "react-router-dom";
+import Login from './Login'
+import './App.css'
 
 function Display() {
   const [pdf,setPdf] = useState("");
-  const [formData,setFormData]=useState({file:""});
+  const [formData,setFormData]=useState("");
   
 
 
@@ -30,7 +31,6 @@ function Display() {
         else{
         console.log(response.data.data)
         setPdf(response.data.data.toString());
-        console.log(pdf)
         }
         
       }
@@ -43,12 +43,13 @@ function Display() {
 
   return (
     <Fragment>
+
         <form onSubmit={handleSubmit}>
             <input type="file"  onChange={handleChange}  name="file" id="file"/>
             <button type="submit">Submit</button>
         </form>
 
-      <div className="antialiased font-sans bg-gray-200">
+      <div className="antialiased font-sans bg-gray-300">
         <div className="container mx-auto px-4 sm:px-8">
           <div className="py-8">
             <div>
@@ -184,6 +185,7 @@ function Display() {
           </div>
         </div>
       </div>
+    
     </Fragment>
   );
 }
