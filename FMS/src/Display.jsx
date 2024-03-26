@@ -1,16 +1,19 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import "./App.css";
 import { Fragment } from "react";
 import pdfImage from "../public/pdf.png";
 import axios from 'axios'
-import { BrowserRouter, Routes, Route, RouterProvider } from "react-router-dom";
-import Login from './Login'
 import './App.css'
+import toast, { Toaster } from 'react-hot-toast';
 
-function Display() {
-  const [pdf,setPdf] = useState("");
-  const [formData,setFormData]=useState("");
-  
+
+
+function Display(pdfData) {
+
+  const [formData, setFormData] = useState(null);
+
+
+  console.log(pdfData)
 
 
   const handleChange = (e) => {
@@ -18,36 +21,65 @@ function Display() {
   };
 
 
-  
-    const handleSubmit = async (e) => {
+
+  const handleSubmit = async (e) => {
     try {
-        e.preventDefault();
-        const data=new FormData()
-        data.append("file",formData)
-        const response = await axios.post("http://localhost:3001/upload/file",data)
-        if (!response.data) {
-          throw new Error("Cannot fetch data");
-        }
-        else{
-        console.log(response.data.data)
-        setPdf(response.data.data.toString());
-        }
-        
+      e.preventDefault();
+      const data = new FormData()
+      data.append("file", formData)
+      const response = await axios.post("http://localhost:3001/upload/file", data)
+      if (!response.data) {
+        throw new Error("Cannot fetch data");
       }
-      catch (err) {
-        console.log("Error fetching PDF:", err);
+      else {
+        toast.success("File Uploaded Sucessfully")
       }
-    } 
-    
-  
+
+     
+
+    }
+    catch (err) {
+      console.log("Error fetching PDF:", err);
+      toast.error("File upload failed")
+    }
+  }
+
+
 
   return (
     <Fragment>
+      <form onSubmit={handleSubmit}>
+          <div className="extraOutline p-4 bg-white w-max m-auto rounded-lg">
+            <div className="file_upload p-5 relative border-4 border-dotted border-gray-300 rounded-lg" style={{ width: '450px' }}>
+              <svg
+                className="text-indigo-500 w-24 mx-auto mb-4"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
+                />
+              </svg>
+              <div className="input_field flex flex-col w-max mx-auto text-center">
+                <label>
+                  <input type="file" onChange={handleChange} name="file" id="file"  className="text-sm cursor-pointer w-36 hidden"/>
+                  <div className="text bg-indigo-600 text-white border border-gray-300 rounded font-semibold cursor-pointer p-1 px-3 hover:bg-indigo-500">Select</div>
+                </label>
+                <div className="title text-indigo-500 uppercase">or drop files here</div>
+              </div>
+            </div>
+          </div>
 
-        <form onSubmit={handleSubmit}>
-            <input type="file"  onChange={handleChange}  name="file" id="file"/>
-            <button type="submit">Submit</button>
-        </form>
+
+        <button type="submit">Submit</button>
+
+      </form>
+      <Toaster />
 
       <div className="antialiased font-sans bg-gray-300">
         <div className="container mx-auto px-4 sm:px-8">
@@ -111,10 +143,10 @@ function Display() {
                   <thead>
                     <tr>
                       <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100  text-s font-semibold text-gray-600 uppercase tracking-wider">
-                        Name
+                        Owner
                       </th>
                       <th className="px-10 py-3 border-b-2 border-gray-200 bg-gray-100  text-s font-semibold text-gray-600 uppercase tracking-wider">
-                        Owner
+                        File
                       </th>
                       <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100  text-s font-semibold text-gray-600 uppercase tracking-wider">
                         Created at
@@ -124,48 +156,51 @@ function Display() {
                       </th>
                     </tr>
                   </thead>
-                  <tbody>
-                    <tr>
-                      <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                        <p className="text-gray-900 whitespace-no-wrap">
-                          Nishant
-                        </p>
-                      </td>
-                      <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                        <div className="flex items-center justify-center">
-                          <div className="flex-shrink-0 w-10 h-10">
-                            <a href={pdf}>
-                              <img
-                                className="rounded-full w-full h-full"
-                                src={pdfImage}
-                                alt=""
-                              />
-                            </a>
+                  {pdfData.map((pdf) => (
+                    <tbody key={pdf.id}>
+                      <tr>
+                        <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                          <p className="text-gray-900 whitespace-no-wrap">
+                            Nishant
+                          </p>
+                        </td>
+                        <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                          <div className="flex items-center justify-center">
+                            <div className="flex-shrink-0 justify-center w-10 h-10">
+                              <a href={pdf.url}>
+                                <img
+                                  className="rounded-full w-full h-full"
+                                  src={pdfImage}
+                                  alt=""
+                                />
+                              </a>
+                            </div>
+                            <div className="ml-3">
+                              <p className="text-gray-900 whitespace-no-wrap">
+                                {pdf.name ? pdf.name : ""}
+                              </p>
+                            </div>
                           </div>
-                          <div className="ml-3">
-                            <p className="text-gray-900 whitespace-no-wrap">
-                              Vera Carpenter
-                            </p>
-                          </div>
-                        </div>
-                      </td>
+                        </td>
 
-                      <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                        <p className="text-gray-900 whitespace-no-wrap">
-                          Jan 21, 2020
-                        </p>
-                      </td>
-                      <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                        <span className="relative inline-block px-3 py-1 font-semibold text-green-900 leading-tight">
-                          <span
-                            aria-hidden
-                            className="absolute inset-0 bg-green-200 opacity-50 rounded-full"
-                          ></span>
-                          <span className="relative">Activo</span>
-                        </span>
-                      </td>
-                    </tr>
-                  </tbody>
+                        <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                          <p className="text-gray-900 whitespace-no-wrap">
+                            20 Jan 2020
+                          </p>
+                        </td>
+                        <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                          <span className="relative inline-block px-3 py-1 font-semibold text-green-900 leading-tight">
+                            <span
+                              aria-hidden
+                              className="absolute inset-0 bg-green-200 opacity-50 rounded-full"
+                            ></span>
+                            <span className="relative">{pdf.size ? Math.floor((pdf.size / 1000)) : 0} KB</span>
+                          </span>
+                        </td>
+                      </tr>
+                    </tbody>
+                  ))}
+
                 </table>
                 <div className="px-5 py-5 bg-white border-t flex flex-col xs:flex-row items-center xs:justify-between">
                   <span className="text-xs xs:text-sm text-gray-900">
@@ -185,7 +220,7 @@ function Display() {
           </div>
         </div>
       </div>
-    
+
     </Fragment>
   );
 }

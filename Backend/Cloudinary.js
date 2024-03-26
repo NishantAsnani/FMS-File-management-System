@@ -14,8 +14,6 @@ const storage=new CloudinaryStorage({
         allowedFormats:['pdf','docx']
     }
     })
-    
-   
 
 module.exports={
 cloudinary,

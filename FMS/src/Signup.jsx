@@ -1,101 +1,139 @@
 import { useState } from "react";
 import axios from 'axios'
+import img from '../public/poster.webp'
 
 
-function Signup(){
+function Signup() {
 
-const [input,setInput]=useState({
-    email:"",
-    Username:"",
-    password:"",
-})
-
-const [pic, setPic] = useState(""); 
-
-const handleChange=(e)=>{
-    setInput({...input,[e.target.name]:e.target.value})
-}
-
-const handlePhotoChange=(e)=>{
-    setPic(e.target.files[0])
-}
+  const [input, setInput] = useState({
+    email: "",
+    Firstname: "",
+    Lastname: "",
+    password: "",
+  })
 
 
-const handleSubmit= async (e)=>{
-    e.preventDefault();
-    const data=new FormData()
-    data.append("email",input.email)
-    data.append("Username",input.Username)
-    data.append("password",input.password)
 
-    const response=axios.post('http://localhost:3001/Signup',data)
+  const handleChange = (e) => {
+    setInput({ ...input, [e.target.name]: e.target.value })
+  }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    const response = await axios.post('http://localhost:3001/Signup', input)
     if (!response.data) {
-        throw new Error("Cannot fetch data");
-      }
-      else{
-      console.log(response.message)
-      }
-}
-    return (
-        <div className="bg-transparent text-white min-h-screen flex items-center justify-center">
-          <div className="bg-gray-800 w-2/4 rounded-lg p-8">
-            <h2 className="text-2xl mb-4">Sign Up</h2>
-            <form className="space-y-4" onSubmit={handleSubmit}>
-              <div>
-                <label htmlFor="username" className="block mb-1">Username:</label>
-                <input
-                  type="text"
-                  id="username"
-                  name="username"
-                  className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded"
-                  placeholder="Enter your username"
-                  value={input.Username}
-                  onChange={handleChange}
-                />
-              </div>
-              <div>
-                <label htmlFor="email" className="block mb-1">Email:</label>
-                <input
-                  type="email"
-                  id="email"
-                  name='email'
-                  className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded"
-                  placeholder="Enter your email"
-                  value={input.email}
-                  onChange={handleChange}
-                />
-              </div>
-              <div>
-                <label htmlFor="password" className="block mb-1">Password:</label>
-                <input
-                  type="password"
-                  id="password"
-                  name='password'
-                  className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded"
-                  placeholder="Enter your password"
-                  value={input.password}
-                  onChange={handleChange}
-                />
-              </div>
-              <div>
-            <label htmlFor="profilePhoto" className="block mb-1">Profile Photo:</label>
-            <input
-              type="file"
-              id="profilePhoto"
-              className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded"
-              onChange={handlePhotoChange}
-              name='photo'
-            />
-          </div>
-              <button
-                type="submit"
-                className="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded">
-                Sign Up
-              </button>
-            </form>
+      throw new Error("Cannot fetch data");
+    }
+    else {
+      console.log(response.data.message)
+    }
+  }
+  return (
+    <div className="h-full">
+      <div className="mx-auto">
+        <div className="flex justify-center px-6 py-12">
+
+          <div className="w-full xl:w-3/4 lg:w-11/12 flex">
+
+            <div className="hidden lg:block lg:w-5/12 bg-cover rounded-l-lg"
+              style=
+              {{
+                backgroundImage: `url(${img})`,
+                backgroundPosition: 'center right',
+                backgroundSize: 'cover',
+                backgroundRepeat: 'no-repeat',
+                transform: 'translateY(-10%)',
+              }}></div>
+
+            <div className="w-full lg:w-7/12 bg-white dark:bg-gray-700 p-5 rounded-lg lg:rounded-l-none">
+              <h3 className="py-4 text-2xl text-center text-gray-800 dark:text-white">Log into Your Account</h3>
+              <form onSubmit={handleSubmit} className="px-8 pt-6 pb-8 mb-4 bg-white dark:bg-gray-800 rounded">
+                <div className="mb-4 md:flex md:justify-between">
+                  <div className="mb-4 md:mr-2 md:mb-0">
+                    <label className="block mb-2 text-sm font-bold text-gray-700 dark:text-white" htmlFor="firstName">
+                      First Name
+                    </label>
+                    <input
+                      className="w-full px-3 py-2 text-sm leading-tight text-gray-700 dark:text-white border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
+                      id="firstName"
+                      type="text"
+                      name='Firstname'
+                      value={input.Firstname}
+                      onChange={handleChange}
+                      placeholder="First Name"
+                    />
+                  </div>
+                  <div className="md:ml-2">
+                    <label className="block mb-2 text-sm font-bold text-gray-700 dark:text-white" htmlFor="lastName">
+                      Last Name
+                    </label>
+                    <input
+                      className="w-full px-3 py-2 text-sm leading-tight text-gray-700 dark:text-white border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
+                      id="lastName"
+                      type="text"
+                      name='Lastname'
+                      value={input.Lastname}
+                      onChange={handleChange}
+                      placeholder="Last Name"
+                    />
+                  </div>
+                </div>
+                <div className="mb-4">
+                  <label className="block mb-2 text-sm font-bold text-gray-700 dark:text-white" htmlFor="email">
+                    Email
+                  </label>
+                  <input
+                    className="w-full px-3 py-2 mb-3 text-sm leading-tight text-gray-700 dark:text-white border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
+                    id="email"
+                    type="email"
+                    placeholder="Email"
+                    name='email'
+                    value={input.email}
+                    onChange={handleChange}
+                  />
+                </div>
+                <div className="mb-4 md:flex md:justify-between">
+                  <div className="mb-4 md:mr-2 md:mb-0">
+                    <label className="block mb-2 text-sm font-bold text-gray-700 dark:text-white" htmlFor="password">
+                      Password
+                    </label>
+                    <input
+                      className="w-full px-3 py-2 mb-3 text-sm leading-tight text-gray-700 dark:text-white border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
+                      id="password"
+                      type="password"
+                      name='password'
+                      value={input.password}
+                      onChange={handleChange}
+                      placeholder="******************"
+                    />
+                    
+                  </div>
+
+                </div>
+                <div className="mb-6 text-center">
+                  <button
+                    className="w-full px-4 py-2 font-bold text-white bg-blue-500 rounded-full hover:bg-blue-700 dark:bg-blue-700 dark:text-white dark:hover:bg-blue-900 focus:outline-none focus:shadow-outline"
+                    type="Submit"
+                  >
+                    Register Account
+                  </button>
+                </div>
+                <hr className="mb-6 border-t" />
+                <div className="text-center">
+                </div>
+                <div className="text-center">
+                  <a className="inline-block text-sm text-blue-500 dark:text-blue-500 align-baseline hover:text-blue-800"
+                    href="/Login">
+                    Already have an account? Login!
+                  </a>
+                </div>
+              </form>
+            </div>
           </div>
         </div>
-      );
+      </div>
+    </div >
+  )
 }
 
 

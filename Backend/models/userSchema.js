@@ -1,53 +1,76 @@
-const mongoose=require('mongoose');
-const {Schema}=mongoose
-const bcrypt=require('bcrypt');
+const mongoose = require('mongoose');
+const { Schema } = mongoose
+const bcrypt = require('bcrypt');
+const JWT = require('jsonwebtoken')
 
 
 
-const userData=new Schema({
-    Username:{
-        type:String,
-        required:true
+const userData = new Schema({
+    Firstname: {
+        type: String,
+        required: true
     },
-    email:{
-        type:String,
-        required:true,
+    Lastname: {
+        type: String,
+        required: true
     },
-    password:{
-        type:String,
-        required:true,
-        min:6,
-        validate:{
-            validator:(password)=>{
+    email: {
+        type: String,
+        required: true,
+    },
+    password: {
+        type: String,
+        required: true,
+        min: 6,
+        validate: {
+            validator: (password) => {
                 return !password.includes('password')
             }
         }
     },
-    Profile_Pic:{
-        type:String,
-    },
-    pdf:
-    [
+    tokens: [
         {
-            type:Schema.Types.ObjectId,
-            ref:'pdf'
-        }
-    ]
+            token: {
+                type: String,
+                required: true,
+            },
+        },
+    ],
+    pdf:
+        [
+            {
+                type: Schema.Types.ObjectId,
+                ref: 'pdf'
+            }
+        ]
 })
 
 
-userData.pre('save',async function(next){
-    const user=this;
-    user.password=await bcrypt.hash(user.password,12);
+userData.methods.generateAuthToken = async function () {
+    const user = this;
+    const payload = {
+        id: user.id,
+        email: user.email
+    }
+    const token = JWT.sign(payload,process.env.SECRET_KEY);
+    user.tokens.push({ token })
+    await user.save();
+    return token;
+}
+
+userData.pre('save', async function (next) {
+    const user = this;
+    if (user.isModified("password")) {
+        user.password = await bcrypt.hash(user.password, 12);
+    }
+
     next()
 })
 
-
-
-const User=mongoose.model('User',userData)
+const User = mongoose.model('User', userData)
 
 
 
 
 
-module.exports=User
+module.exports = User

@@ -12,6 +12,10 @@ const pdfSchema=new Schema({
         type:Number,
         required:true
     },
+    url:{
+        type:String,
+        required:true
+    },
     author:{
         type:Schema.Types.ObjectId,
         ref:'User'
