@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from 'axios';
-import Display from './Display';
+
+
 
 function Display2() {
     const [pdfData, setPdfData] = useState([]);
@@ -9,8 +10,9 @@ function Display2() {
         const fetchData = async () => {
             try {
                 const response = await axios.get("http://localhost:3001/pdf/show");
-                console.log(response.data.data)
-                setPdfData([response.data.data]);
+                setPdfData(response.data.data);
+                console.log(...response.data.data)
+
             } catch (error) {
                 console.log(error)
             }
@@ -19,7 +21,11 @@ function Display2() {
     }, []);
     return (
         <div>
-            <Display pdfData={pdfData} />
+            {pdfData.map((pdf) => {
+                <div>
+                    {pdf.name}
+                </div>
+            })}
         </div>
     );
 }
