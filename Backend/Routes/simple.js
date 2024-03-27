@@ -14,7 +14,7 @@ router.post("/Signup", async (req, res) => {
   const Duplicate = await User.findOne({ email: req.body.email });
   if (Duplicate) {
     console.log("User already exists");
-    return res.status(400).json({ msg: "User already exists" });
+    return res.status(409).json({ msg: "User already exists" });
   }
 
   else {
@@ -47,7 +47,7 @@ router.post("/Login", async (req, res) => {
   const validPassword = await bcrypt.compare(password, user.password);
   if (validPassword) {
     const token = await user.generateAuthToken()
-    res.status(200).send({ msg: token })
+    res.status(200).send({ token})
   }
   else {
     res.status(500).json({ msg: "Cannot login into the app" });
@@ -85,7 +85,9 @@ router.post('/upload/file', upload.single('file'), async (req, res) => {
   }
 });
 
-
+router.post('/Logout',(req,res)=>{
+  
+})
 
 
 module.exports = router;

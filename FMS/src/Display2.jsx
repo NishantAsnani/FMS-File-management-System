@@ -1,32 +1,33 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
+import { useNavigate } from 'react-router-dom'
 import axios from 'axios';
+import Display from './Display'
+import { AuthContext } from "./AuthContext";
 
 
 
 function Display2() {
+    const navigate = useNavigate();
+    const { token } = useContext(AuthContext)
+
+    useEffect(() => {
+        if (!token) {
+            navigate('/Login');
+        }
+    }, [token, navigate]);
+
     const [pdfData, setPdfData] = useState([]);
 
     useEffect(() => {
         const fetchData = async () => {
-            try {
-                const response = await axios.get("http://localhost:3001/pdf/show");
-                setPdfData(response.data.data);
-                console.log(...response.data.data)
-
-            } catch (error) {
-                console.log(error)
-            }
-        };
+            await axios.get("http://localhost:3001/pdf/show")
+                .then((response) => setPdfData(response.data.data))
+                .catch((err) => console.log(err))
+        }
         fetchData();
     }, []);
     return (
-        <div>
-            {pdfData.map((pdf) => {
-                <div>
-                    {pdf.name}
-                </div>
-            })}
-        </div>
+        <Display pdfData={pdfData} />
     );
 }
 

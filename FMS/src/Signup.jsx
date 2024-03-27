@@ -1,7 +1,8 @@
 import { useState } from "react";
 import axios from 'axios'
 import img from '../public/poster.webp'
-
+import { useNavigate } from 'react-router-dom'
+import toast, { Toaster } from 'react-hot-toast';
 
 function Signup() {
 
@@ -12,6 +13,7 @@ function Signup() {
     password: "",
   })
 
+  const navigate = useNavigate();
 
 
   const handleChange = (e) => {
@@ -19,17 +21,34 @@ function Signup() {
   }
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
-    const response = await axios.post('http://localhost:3001/Signup', input)
-    if (!response.data) {
-      throw new Error("Cannot fetch data");
-    }
-    else {
-      console.log(response.data.message)
+    e.preventDefault();
+    try {
+      const response = await axios.post('http://localhost:3001/Signup', input);
+      if (!response.data) {
+        throw new Error("Cannot fetch data");
+      } else {
+        console.log(response.data.message);
+        toast.success("User signed up ");
+        navigate('/Login');
+      }
+    } catch (error) {
+      if (error.response && error.response.status === 409) {
+        toast.error("User Already Exists");
+        setInput({
+          email: "",
+          Firstname: "",
+          Lastname: "",
+          password: "",
+        })
+      } else {
+        console.error("Error during signup:", error);
+        toast.error("An error occurred during signup. Please try again later.");
+      }
     }
   }
   return (
     <div className="h-full">
+      <Toaster />
       <div className="mx-auto">
         <div className="flex justify-center px-6 py-12">
 
@@ -106,7 +125,7 @@ function Signup() {
                       onChange={handleChange}
                       placeholder="******************"
                     />
-                    
+
                   </div>
 
                 </div>

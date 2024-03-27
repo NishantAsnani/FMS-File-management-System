@@ -1,15 +1,16 @@
 import img from '../public/poster.webp'
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 import toast, { Toaster } from 'react-hot-toast';
-
+import { AuthContext } from './AuthContext';
 
 function Login() {
   const [inputValue, setInputValue] = useState({
     email: "",
     password: ""
   })
+  const { setToken } = useContext(AuthContext);
   const navigate = useNavigate();
 
 
@@ -21,12 +22,14 @@ function Login() {
     try {
       e.preventDefault();
       const response = await axios.post("http://localhost:3001/Login", inputValue)
-      console.log(response.data.msg)
-      localStorage.setItem('token', JSON.stringify(response.data.msg))
+      setToken(response.data.token);
+      localStorage.setItem('token', response.data.token)
       navigate('/Display')
     }
     catch (err) {
       console.log("Error fetching Data:", err.response);
+      setToken(null)
+      localStorage.removeItem("token");
       if (err.response.status == 500) {
         toast.error("Error logging in ")
         navigate('/Login')
