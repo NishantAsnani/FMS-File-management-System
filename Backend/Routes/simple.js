@@ -57,16 +57,20 @@ router.post("/Login", async (req, res) => {
 
 router.post('/upload/file', upload.single('file'), async (req, res) => {
   try {
+    const token=req.body.token;
+    const user=JWT.verify(token,process.env.SECRET_KEY)
     const file = await cloudinary.uploader.upload(req.file.path, {
       pages: true,
       resource_type: 'auto',
       public_id: req.file.originalname
     });
+    console.log(user)
     const PDF = new pdf({
       name: file.public_id,
       size: file.bytes,
       url:file.secure_url,
-      author:'65f9159b7214b5a0db5fa28d',
+      authorId:user.id,
+      authorName:user.FirstName
     })
     await PDF.save()
     res.status(201).send({
@@ -76,7 +80,6 @@ router.post('/upload/file', upload.single('file'), async (req, res) => {
       name: file.public_id,
       pdf:PDF
     });
-
   } catch (e) {
     console.error(e);
     res.status(500).send({
@@ -86,7 +89,7 @@ router.post('/upload/file', upload.single('file'), async (req, res) => {
 });
 
 router.post('/Logout',(req,res)=>{
-  
+
 })
 
 

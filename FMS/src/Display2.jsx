@@ -14,18 +14,20 @@ function Display2() {
         if (!token) {
             navigate('/Login');
         }
+        else{
+            fetchData()
+        }
     }, [token, navigate]);
 
     const [pdfData, setPdfData] = useState([]);
 
-    useEffect(() => {
+    
         const fetchData = async () => {
             await axios.get("http://localhost:3001/pdf/show")
                 .then((response) => setPdfData(response.data.data))
                 .catch((err) => console.log(err))
         }
-        fetchData();
-    }, []);
+        
     return (
         <Display pdfData={pdfData} />
     );

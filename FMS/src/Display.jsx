@@ -1,18 +1,20 @@
-import { useState } from "react";
+import { useState,useContext } from "react";
 import "./App.css";
 import { Fragment } from "react";
 import pdfImage from "../public/pdf.png";
 import axios from 'axios'
 import './App.css'
 import toast, { Toaster } from 'react-hot-toast';
-
+import { AuthContext } from "./AuthContext";
 
 
 
 function Display({ pdfData }) {
 
   const [formData, setFormData] = useState(null);
+  const { token } = useContext(AuthContext)
 
+  
 
   const handleChange = (e) => {
     setFormData(e.target.files[0]);
@@ -25,7 +27,7 @@ function Display({ pdfData }) {
       e.preventDefault();
       const data = new FormData()
       data.append("file", formData)
-      data.append()
+      data.append("token",token)
       const response = await axios.post("http://localhost:3001/upload/file", data)
       if (!response.data) {
         throw new Error("Cannot fetch data");
@@ -129,12 +131,12 @@ function Display({ pdfData }) {
                       </th>
                     </tr>
                   </thead>
-                  {pdfData.map((pdf) => (
+                  {pdfData && pdfData.map((pdf) => (
                     <tbody>
                       <tr>
                         <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                           <p className="text-gray-900 whitespace-no-wrap">
-                            Nishant
+                            {pdf.authorName ? pdf.authorName : ""}
                           </p>
                         </td>
                         <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">

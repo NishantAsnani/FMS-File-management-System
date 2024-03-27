@@ -16,8 +16,12 @@ const pdfSchema = new Schema({
         type: String,
         required: true
     },
-    author: {
+    authorId: {
         type: Schema.Types.ObjectId,
+        ref: 'User'
+    },
+    authorName: {
+        type: String,
         ref: 'User'
     },
     createdAt: {

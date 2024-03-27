@@ -50,7 +50,7 @@ userData.methods.generateAuthToken = async function () {
     const user = this;
     const payload = {
         id: user.id,
-        email: user.email
+        FirstName:user.Firstname,
     }
     const token = JWT.sign(payload,process.env.SECRET_KEY);
     user.tokens.push({ token })
