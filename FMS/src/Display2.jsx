@@ -9,19 +9,22 @@ import { AuthContext } from "./AuthContext";
 function Display2() {
     const navigate = useNavigate();
     const { token } = useContext(AuthContext)
+    const [tokenFetched, setTokenFetched] = useState(false);
 
     useEffect(() => {
-        if (!token) {
-            navigate('/Login');
+        if (!tokenFetched) {
+
+            setTokenFetched(true);
+        } else {
+            if (!token) {
+                navigate('/Login');
+            } else {
+                fetchData();
+            }
         }
-        else{
-            fetchData()
-        }
-    }, [token, navigate]);
+    }, [token, tokenFetched, navigate]);
 
     const [pdfData, setPdfData] = useState([]);
-
-    
         const fetchData = async () => {
             await axios.get("http://localhost:3001/pdf/show")
                 .then((response) => setPdfData(response.data.data))

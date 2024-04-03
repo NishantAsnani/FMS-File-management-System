@@ -65,7 +65,7 @@ function Signup() {
               }}></div>
 
             <div className="w-full lg:w-7/12 bg-white dark:bg-gray-700 p-5 rounded-lg lg:rounded-l-none">
-              <h3 className="py-4 text-2xl text-center text-gray-800 dark:text-white">Log into Your Account</h3>
+              <h3 className="py-4 text-2xl text-center text-gray-800 dark:text-white">Sign Up</h3>
               <form onSubmit={handleSubmit} className="px-8 pt-6 pb-8 mb-4 bg-white dark:bg-gray-800 rounded">
                 <div className="mb-4 md:flex md:justify-between">
                   <div className="mb-4 md:mr-2 md:mb-0">

@@ -1,4 +1,4 @@
-import { useState,useContext } from "react";
+import { useState, useContext } from "react";
 import "./App.css";
 import { Fragment } from "react";
 import pdfImage from "../public/pdf.png";
@@ -6,28 +6,30 @@ import axios from 'axios'
 import './App.css'
 import toast, { Toaster } from 'react-hot-toast';
 import { AuthContext } from "./AuthContext";
-
+import { useNavigate } from 'react-router-dom'
 
 
 function Display({ pdfData }) {
 
   const [formData, setFormData] = useState(null);
   const { token } = useContext(AuthContext)
-
-  
-
+  const navigate = useNavigate();
   const handleChange = (e) => {
     setFormData(e.target.files[0]);
   };
 
 
+  const handleLogout = (e) => {
+    localStorage.removeItem("token")
+    navigate('/Login')
+  }
 
   const handleSubmit = async (e) => {
     try {
       e.preventDefault();
       const data = new FormData()
       data.append("file", formData)
-      data.append("token",token)
+      data.append("token", token)
       const response = await axios.post("http://localhost:3001/upload/file", data)
       if (!response.data) {
         throw new Error("Cannot fetch data");
@@ -49,7 +51,7 @@ function Display({ pdfData }) {
 
   return (
     <Fragment>
-      <button>Logout</button>
+      <button onClick={handleLogout}>Logout</button>
       <form onSubmit={handleSubmit}>
         <input type="file" onChange={handleChange} name="file" id="file" />
         <button type="submit">Submit</button>
@@ -131,7 +133,7 @@ function Display({ pdfData }) {
                       </th>
                     </tr>
                   </thead>
-                  {pdfData && pdfData.map((pdf) => (
+                  {...pdfData && pdfData.map((pdf) => (
                     <tbody>
                       <tr>
                         <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
