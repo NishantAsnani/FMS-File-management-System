@@ -93,9 +93,6 @@ router.post('/upload/file',auth,upload.single('file'), async (req, res) => {
 
     res.status(201).send({
       message: "File uploaded successfully",
-      data: file.secure_url,
-      size: file.bytes,
-      name: file.public_id,
       pdf: PDF
     });
   } catch (e) {

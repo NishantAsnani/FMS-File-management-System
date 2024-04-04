@@ -1,12 +1,11 @@
 import { useState, useEffect, useContext } from "react";
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios';
-import Display from './Display'
-import { AuthContext } from "./AuthContext";
+import FileUpload from './FileUpload'
+import { AuthContext } from "../AuthContext";
+import '../App.css'
 
-
-
-function Display2() {
+function Display() {
     const navigate = useNavigate();
     const { token } = useContext(AuthContext)
     const [tokenFetched, setTokenFetched] = useState(false);
@@ -36,8 +35,8 @@ function Display2() {
     }
 
     return (
-        <Display pdfData={pdfData} />
+        <FileUpload pdfData={pdfData} />
     );
 }
 
-export default Display2;
+export default Display;

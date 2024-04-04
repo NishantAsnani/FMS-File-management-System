@@ -1,12 +1,8 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Login from "./Login";
-import Signup from "./Signup";
-import Display2 from './Display2'
+import Login from "./Pages/Login";
+import Signup from "./Pages/Signup";
+import Display from './Pages/Display'
 import { AuthProvider } from './AuthContext';
-
-
-
-
 
 
 
@@ -17,11 +13,11 @@ function App() {
         <Routes>
           <Route path="/" element={<Signup />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/Display" element={<Display2 />} />
+          <Route path="/Display" element={<Display />} />
         </Routes>
       </Router>
-      </AuthProvider>
-      );
+    </AuthProvider>
+  );
 }
 
-      export default App;
+export default App;

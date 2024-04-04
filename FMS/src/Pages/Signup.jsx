@@ -1,6 +1,6 @@
 import { useState } from "react";
 import axios from 'axios'
-import img from '../public/poster.webp'
+import img from '../../public/poster.webp'
 import { useNavigate } from 'react-router-dom'
 import toast, { Toaster } from 'react-hot-toast';
 
@@ -29,7 +29,12 @@ function Signup() {
       } else {
         console.log(response.data.message);
         toast.success("User signed up ");
-        navigate('/Login');
+        setInput({
+          email: "",
+          Firstname: "",
+          Lastname: "",
+          password: "",
+        })
       }
     } catch (error) {
       if (error.response && error.response.status === 409) {

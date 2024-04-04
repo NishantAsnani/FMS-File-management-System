@@ -1,9 +1,10 @@
-import img from '../public/poster.webp'
+import img from '../../public/poster.webp'
 import { useState, useContext } from 'react';
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 import toast, { Toaster } from 'react-hot-toast';
-import { AuthContext } from './AuthContext';
+import { AuthContext } from '../AuthContext';
+import '../App.css'
 
 function Login() {
   const [inputValue, setInputValue] = useState({
