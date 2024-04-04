@@ -51,6 +51,7 @@ userData.methods.generateAuthToken = async function () {
     const payload = {
         id: user.id,
         FirstName:user.Firstname,
+        pdf:user.pdf
     }
     const token = JWT.sign(payload,process.env.SECRET_KEY);
     user.tokens.push({ token })

@@ -19,9 +19,22 @@ function Display({ pdfData }) {
   };
 
 
-  const handleLogout = (e) => {
-    localStorage.removeItem("token")
-    navigate('/Login')
+  const handleLogout = async (e) => {
+    e.preventDefault();
+    const response = await axios.post("http://localhost:3001/Logout",null,{
+      headers: {
+        Authorization:`${token}`
+    }
+    })
+    if (!response.data) {
+      throw new Error("Error");
+    }
+    else {
+      toast.success("User Logged Out")
+      localStorage.removeItem("token")
+      navigate('/Login')
+    }
+    
   }
 
   const handleSubmit = async (e) => {
@@ -29,16 +42,17 @@ function Display({ pdfData }) {
       e.preventDefault();
       const data = new FormData()
       data.append("file", formData)
-      data.append("token", token)
-      const response = await axios.post("http://localhost:3001/upload/file", data)
+      const response = await axios.post("http://localhost:3001/upload/file",data,{
+        headers: {
+          Authorization: `${token}`
+      }
+      })
       if (!response.data) {
         throw new Error("Cannot fetch data");
       }
       else {
         toast.success("File Uploaded Sucessfully")
       }
-
-
 
     }
     catch (err) {
@@ -47,7 +61,7 @@ function Display({ pdfData }) {
     }
   }
 
-
+  
 
   return (
     <Fragment>
