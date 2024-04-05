@@ -1,20 +1,19 @@
 const express = require('express');
 const router = express.Router();
-const pdf = require('../models/pdfSchema')
 const User = require('../models/userSchema')
-const JWT = require('jsonwebtoken')
 const auth = require('../middleware')
+const PDF = require("../models/pdfSchema")
 require('dotenv').config()
 
 
 router.get('/show', auth, async (req, res) => {
     const user = await req.user.populate('pdf');
     const data = user.pdf
-    res.status(200).send({ data })
+    res.status(200).send({ data,Firstname:req.user.Firstname })
 })
 
 
-router.post('/giveAccess',auth, async (req, res) => {
+router.post('/giveAccess', auth, async (req, res) => {
     const email = req.body.email
     const pdf = req.body.pdf
     const user = await User.findOne({ email })
@@ -27,8 +26,28 @@ router.post('/giveAccess',auth, async (req, res) => {
     else {
         user.pdf.push(pdf)
         await user.save();
-        res.status(200).send({message:"Access rights given sucessfully"})
+        res.status(200).send({ message: "Access rights given sucessfully" })
     }
 })
+
+
+router.post('/delete', auth, async (req, res) => {
+    const pdf = req.body.pdf;
+
+    if (pdf.authorId != req.user._id) {
+        return res.status(403).send({ message: "Cannot delete, you are not the author" });
+    }
+
+    try {
+        const deletedPDF = await PDF.findByIdAndDelete(pdf._id);
+        if (!deletedPDF) {
+            return res.status(404).send({ message: "PDF not found" });
+        }
+        res.status(200).send({ message: "PDF deleted successfully" });
+    } catch (error) {
+        console.error("Error deleting PDF:", error);
+        res.status(500).send({ message: "Internal server error" });
+    }
+});
 
 module.exports = router;

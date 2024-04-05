@@ -8,12 +8,12 @@ import { useNavigate } from 'react-router-dom'
 import Modal from "./Modal";
 import '../App.css'
 import Loading from './Loading'
+import Select from 'react-select';
 
-
-function FileUpload({ pdfData }) {
-
+function FileUpload({ pdfData,Name }) {
   const [formData, setFormData] = useState(null);
   const [load, setLoading] = useState(false);
+  const [selectedOption, setSelectedOption] = useState(null); 
   const [viewModal, setViewModal] = useState(false);
   const [selectedPdf, setSelectedPdf] = useState(null);
   const { token } = useContext(AuthContext)
@@ -58,20 +58,35 @@ function FileUpload({ pdfData }) {
         throw new Error("Cannot fetch data");
       } else {
         toast.success("File Uploaded Successfully");
+        console.log(response.data)
         location.reload(); // Reloading the page after successful upload
       }
     } catch (err) {
       console.error("Error uploading file:", err);
       toast.error("File upload failed");
     } finally {
-      setLoading(false); // Set loading to false when file upload completes or encounters an error
+      setLoading(false);
     }
   }
+
+  const options = [
+    { value: 'Access-Right', label: 'Access-Right' },
+    { value: 'Delete', label: 'Delete' },
+
+  ];
+
+  const handleOptionChange = (selectedOption) => {
+    setSelectedOption(selectedOption);
+    if (selectedOption) {
+      setViewModal(true);
+    }
+  };
 
   return (
     <Fragment>
       <div className="container mx-auto px-4 sm:px-8">
         <div className="py-8">
+        <h1 className="text-center text-3xl font-bold text-white mb-4">Welcome, {Name}!</h1>
           <button onClick={handleLogout} className="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-md mb-4">Logout</button>
           <form onSubmit={handleSubmit} className="mb-4">
             <input type="file" onChange={handleChange} name="file" id="file" className="border border-gray-300 p-2 rounded-md mr-2" />
@@ -103,9 +118,11 @@ function FileUpload({ pdfData }) {
                     <td className="px-4 py-2 text-white">{pdf.createdAt ? new Date(pdf.createdAt).toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' }) : ""}</td>
                     <td className="px-4 py-2 text-white">{pdf.size ? Math.floor((pdf.size / 1000)) : 0} KB</td>
                     <td className="px-4 py-2">
-                      <button onClick={() => { setViewModal(true); setSelectedPdf(pdf); }} className="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold py-1 px-2 rounded-md">
-                        View
-                      </button>
+                      <Select
+                        options={options}
+                        onChange={(e) => { handleOptionChange(e); setSelectedPdf(pdf); }}
+                        placeholder="Actions"
+                      />
                     </td>
                   </tr>
                 ))}
@@ -116,7 +133,8 @@ function FileUpload({ pdfData }) {
         </div>
       </div>
 
-      <Modal viewModal={viewModal} setViewModal={setViewModal} pdf={selectedPdf} />
+      <Modal viewModal={viewModal} setViewModal={setViewModal} pdf={selectedPdf}
+        selectedOption={selectedOption} />
     </Fragment>
   );
 }

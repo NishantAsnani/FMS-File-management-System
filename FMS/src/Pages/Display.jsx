@@ -24,18 +24,23 @@ function Display() {
     }, [token, tokenFetched, navigate]);
 
     const [pdfData, setPdfData] = useState([]);
+    const [Name,setName]=useState("")
     const fetchData = async () => {
         await axios.get("http://localhost:3001/pdf/show", {
             headers: {
                 Authorization: `${token}`
             }
         })
-            .then((response) => setPdfData(response.data.data))
+            .then((response) => {
+                setPdfData(response.data.data)
+                setName(response.data.Firstname)
+                console.log(response.data.Firstname)
+            })
             .catch((err) => console.log(err))
     }
 
     return (
-        <FileUpload pdfData={pdfData} />
+        <FileUpload pdfData={pdfData} Name={Name} />
     );
 }
 

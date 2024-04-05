@@ -93,7 +93,8 @@ router.post('/upload/file',auth,upload.single('file'), async (req, res) => {
 
     res.status(201).send({
       message: "File uploaded successfully",
-      pdf: PDF
+      pdf: PDF,
+      user: req.user.Firstname
     });
   } catch (e) {
     console.error(e);
@@ -102,8 +103,6 @@ router.post('/upload/file',auth,upload.single('file'), async (req, res) => {
     });
   }
 });
-
-
 
 
 module.exports = router;
