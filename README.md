@@ -24,7 +24,7 @@ This project is a MERN (MongoDB, Express.js, React.js, Node.js) stack-based file
 1. **Clone the Repository:**
    ```bash
    git clone <repository-url>
-   cd FMS and npm install (Frontend)
+   cd FMS and npm install 
    cd Backend npm install
 
 ## Set .env Variables
@@ -34,5 +34,5 @@ This project is a MERN (MongoDB, Express.js, React.js, Node.js) stack-based file
     SECRET_KEY=<your-secret-key-for-JWT>
 
 ## Running Instructions
-    cd backend && npm start
-    cd frontend && npm start
+    cd Backend && npm start
+    cd FMS && npm start
