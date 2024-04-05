@@ -29,9 +29,12 @@ This project is a MERN (MongoDB, Express.js, React.js, Node.js) stack-based file
 
 ## Set .env Variables inside dev.env file backend
 
-    PORT=3001
     MONGODB_URI=<your-mongodb-uri>
     SECRET_KEY=<your-secret-key-for-JWT>
+    CLOUDINARY_CLOUD_NAME=<your-cloud-name>
+    CLOUDINARY_KEY=<your-cloud-key>
+    CLOUDINARY_SECRET=<your-cloud-secret>
+    PORT=<Port number of your choice>
 
 ## Running Instructions
     cd Backend && npm start

@@ -34,6 +34,6 @@ mongoose.connect(uri)
 
 
 
-app.listen(3001, () => {
-  console.log("Listening to port 3001");
+app.listen(process.env.PORT, () => {
+  console.log("Listening to port ");
 });
