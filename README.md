@@ -6,8 +6,8 @@ This project is a MERN (MongoDB, Express.js, React.js, Node.js) stack-based file
 
 - **User Authentication:** Users can sign up and log in to access the system.
 - **File Upload:** Authenticated users can upload PDF files to the system.
-- **File Management:** Users can view, edit, and delete their uploaded files.
-- **Access Control:** Users can grant access to other users for reading, writing, or deleting specific files.
+- **File Management:** Users can view , and delete their uploaded files.
+- **Access Control:** Users can grant access to other users for reading files.
 
 ## Technologies Used
 
