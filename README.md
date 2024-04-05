@@ -27,7 +27,7 @@ This project is a MERN (MongoDB, Express.js, React.js, Node.js) stack-based file
    cd FMS and npm install 
    cd Backend npm install
 
-## Set .env Variables
+## Set .env Variables inside dev.env file backend
 
     PORT=3001
     MONGODB_URI=<your-mongodb-uri>
