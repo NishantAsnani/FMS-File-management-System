@@ -78,7 +78,7 @@ function Signup() {
                       First Name
                     </label>
                     <input
-                      className="w-full px-3 py-2 text-sm leading-tight text-gray-700 dark:text-white border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
+                      className="w-full px-3 py-2 text-sm leading-tight text-gray-700  border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
                       id="firstName"
                       type="text"
                       name='Firstname'
@@ -92,7 +92,7 @@ function Signup() {
                       Last Name
                     </label>
                     <input
-                      className="w-full px-3 py-2 text-sm leading-tight text-gray-700 dark:text-white border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
+                      className="w-full px-3 py-2 text-sm leading-tight text-gray-700  border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
                       id="lastName"
                       type="text"
                       name='Lastname'
@@ -107,7 +107,7 @@ function Signup() {
                     Email
                   </label>
                   <input
-                    className="w-full px-3 py-2 mb-3 text-sm leading-tight text-gray-700 dark:text-white border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
+                    className="w-full px-3 py-2 mb-3 text-sm leading-tight text-gray-700  border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
                     id="email"
                     type="email"
                     placeholder="Email"
@@ -122,7 +122,7 @@ function Signup() {
                       Password
                     </label>
                     <input
-                      className="w-full px-3 py-2 mb-3 text-sm leading-tight text-gray-700 dark:text-white border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
+                      className="w-full px-3 py-2 mb-3 text-sm leading-tight text-gray-700  border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
                       id="password"
                       type="password"
                       name='password'

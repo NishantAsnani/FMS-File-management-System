@@ -37,5 +37,5 @@ This project is a MERN (MongoDB, Express.js, React.js, Node.js) stack-based file
     PORT=<Port number of your choice>
 
 ## Running Instructions
-    cd Backend && npm start
-    cd FMS && npm start
+    cd Backend && npm run start
+    cd FMS && npm run dev
