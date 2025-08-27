@@ -30,7 +30,6 @@ router.post('/giveAccess', auth, async (req, res) => {
     }
 })
 
-
 router.post('/delete', auth, async (req, res) => {
     const pdf = req.body.pdf;
 

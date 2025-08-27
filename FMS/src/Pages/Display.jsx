@@ -4,6 +4,7 @@ import axios from 'axios';
 import FileUpload from './FileUpload'
 import { AuthContext } from "../AuthContext";
 import '../App.css'
+const BE_URL=import.meta.env.VITE_BE_URL
 
 function Display() {
     const navigate = useNavigate();
@@ -26,7 +27,7 @@ function Display() {
     const [pdfData, setPdfData] = useState([]);
     const [Name,setName]=useState("")
     const fetchData = async () => {
-        await axios.get("http://localhost:3001/pdf/show", {
+        await axios.get(`${BE_URL}/pdf/show`, {
             headers: {
                 Authorization: `${token}`
             }

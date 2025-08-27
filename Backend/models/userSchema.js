@@ -64,7 +64,6 @@ userData.pre('save', async function (next) {
     if (user.isModified("password")) {
         user.password = await bcrypt.hash(user.password, 12);
     }
-
     next()
 })
 

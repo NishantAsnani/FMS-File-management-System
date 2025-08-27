@@ -1,22 +1,32 @@
-import { useState, useContext } from "react";
-import { Fragment } from "react";
+import React, { useState, useContext } from "react";
 import pdfImage from "../../public/pdf.png";
-import axios from 'axios'
+import axios from 'axios';
 import toast, { Toaster } from 'react-hot-toast';
 import { AuthContext } from "../AuthContext";
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom';
 import Modal from "./Modal";
-import '../App.css'
-import Loading from './Loading'
-import Select from 'react-select';
+import Loading from './Loading';
+import {
+  Box, Button, Container, Typography, Table, TableBody, TableCell, TableContainer,
+  TableHead, TableRow, Paper, IconButton, Card, CardContent, Grid, Menu, MenuItem
+} from '@mui/material';
+import { styled } from '@mui/system';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 
-function FileUpload({ pdfData,Name }) {
+const Input = styled('input')({
+  display: 'none',
+});
+const BE_URL=import.meta.env.VITE_BE_URL
+
+function FileUpload({ pdfData, Name }) {
   const [formData, setFormData] = useState(null);
   const [load, setLoading] = useState(false);
-  const [selectedOption, setSelectedOption] = useState(null); 
   const [viewModal, setViewModal] = useState(false);
   const [selectedPdf, setSelectedPdf] = useState(null);
-  const { token } = useContext(AuthContext)
+  const [actionAnchorEl, setActionAnchorEl] = useState(null);
+  const [actionPdf, setActionPdf] = useState(null);
+  const [selectedAction, setSelectedAction] = useState(null);
+  const { token } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -26,7 +36,7 @@ function FileUpload({ pdfData,Name }) {
   const handleLogout = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:3001/Logout", null, {
+      const response = await axios.post(`${BE_URL}/Logout`, null, {
         headers: {
           Authorization: `${token}`
         }
@@ -41,15 +51,15 @@ function FileUpload({ pdfData,Name }) {
       console.error("Error logging out:", error);
       toast.error("Error logging out");
     }
-  }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const data = new FormData();
       data.append("file", formData);
-      setLoading(true); // Set loading to true when file upload begins
-      const response = await axios.post("http://localhost:3001/upload/file", data, {
+      setLoading(true);
+      const response = await axios.post(`${BE_URL}/upload/file`, data, {
         headers: {
           Authorization: `${token}`
         }
@@ -58,8 +68,7 @@ function FileUpload({ pdfData,Name }) {
         throw new Error("Cannot fetch data");
       } else {
         toast.success("File Uploaded Successfully");
-        console.log(response.data)
-        location.reload(); // Reloading the page after successful upload
+        location.reload();
       }
     } catch (err) {
       console.error("Error uploading file:", err);
@@ -67,75 +76,137 @@ function FileUpload({ pdfData,Name }) {
     } finally {
       setLoading(false);
     }
-  }
+  };
 
-  const options = [
-    { value: 'Access-Right', label: 'Access-Right' },
-    { value: 'Delete', label: 'Delete' },
+  // Actions menu handlers
+  const handleActionClick = (event, pdf) => {
+    setActionAnchorEl(event.currentTarget);
+    setActionPdf(pdf);
+  };
 
-  ];
+  const handleActionClose = () => {
+    setActionAnchorEl(null);
+    setActionPdf(null);
+  };
 
-  const handleOptionChange = (selectedOption) => {
-    setSelectedOption(selectedOption);
-    if (selectedOption) {
-      setViewModal(true);
-    }
+  const handleActionSelect = (action) => {
+    setSelectedAction(action);
+    setSelectedPdf(actionPdf);
+    setViewModal(true);
+    handleActionClose();
   };
 
   return (
-    <Fragment>
-      <div className="container mx-auto px-4 sm:px-8">
-        <div className="py-8">
-        <h1 className="text-center text-3xl font-bold text-white mb-4">Welcome, {Name}!</h1>
-          <button onClick={handleLogout} className="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-md mb-4">Logout</button>
-          <form onSubmit={handleSubmit} className="mb-4">
-            <input type="file" onChange={handleChange} name="file" id="file" className="border border-gray-300 p-2 rounded-md mr-2" />
-            <button type="submit" className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-md">Submit</button>
-          </form>
-          <Toaster />
+    <Container maxWidth="md">
+      <Box py={6}>
+        <Card sx={{ mb: 4, boxShadow: 3 }}>
+          <CardContent>
+            <Grid container alignItems="center" justifyContent="space-between" spacing={2}>
+              <Grid item xs={12} sm={8}>
+                <Typography variant="h5" fontWeight={600}>
+                  Welcome, {Name}!
+                </Typography>
+              </Grid>
+              <Grid item xs={12} sm={4} textAlign={{ xs: 'left', sm: 'right' }}>
+                <Button
+                  variant="outlined"
+                  color="secondary"
+                  onClick={handleLogout}
+                  sx={{ mb: { xs: 2, sm: 0 } }}
+                >
+                  Logout
+                </Button>
+              </Grid>
+            </Grid>
+            <Box component="form" onSubmit={handleSubmit} mt={3} display="flex" alignItems="center" gap={2}>
+              <label htmlFor="file">
+                <Input id="file" type="file" onChange={handleChange} />
+                <Button variant="contained" component="span">
+                  Upload File
+                </Button>
+              </label>
+              <Button type="submit" variant="contained" color="primary" disabled={!formData}>
+                Submit
+              </Button>
+            </Box>
+            {/* Show file preview below the upload form, before submit */}
+            {formData && (
+              <Box display="flex" alignItems="center" mt={2} ml={1}>
+                <img
+                  src={pdfImage}
+                  alt="file icon"
+                  style={{ width: 28, height: 28, marginRight: 8 }}
+                />
+                <Typography variant="body2">{formData.name}</Typography>
+              </Box>
+            )}
+          </CardContent>
+        </Card>
 
-          <div className="overflow-x-auto">
-            <table className="w-full table-auto">
-              <thead>
-                <tr>
-                  <th className="px-4 py-2 bg-gray-800 text-gray-100 font-semibold uppercase">Owner</th>
-                  <th className="px-4 py-2 bg-gray-800 text-gray-100 font-semibold uppercase">File</th>
-                  <th className="px-4 py-2 bg-gray-800 text-gray-100 font-semibold uppercase">Uploaded at</th>
-                  <th className="px-4 py-2 bg-gray-800 text-gray-100 font-semibold uppercase">File Size</th>
-                  <th className="px-4 py-2 bg-gray-800 text-gray-100 font-semibold uppercase">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
+        <Toaster />
+
+        <Paper elevation={2}>
+          <TableContainer>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>Owner</TableCell>
+                  <TableCell>File</TableCell>
+                  <TableCell>Uploaded at</TableCell>
+                  <TableCell>File Size</TableCell>
+                  <TableCell align="center">Actions</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
                 {pdfData && pdfData.map((pdf) => (
-                  <tr key={pdf._id} className="border-b border-gray-200">
-                    <td className="px-4 py-2 text-white">{pdf.authorName ? pdf.authorName : ""}</td>
-                    <td className="px-4 py-2">
-                      <div className="flex items-center">
-                        <img src={pdfImage} alt="" className="w-8 h-8 mr-2" />
-                        <a href={pdf.url} className="text-white">{pdf.name ? pdf.name : ""}</a>
-                      </div>
-                    </td>
-                    <td className="px-4 py-2 text-white">{pdf.createdAt ? new Date(pdf.createdAt).toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' }) : ""}</td>
-                    <td className="px-4 py-2 text-white">{pdf.size ? Math.floor((pdf.size / 1000)) : 0} KB</td>
-                    <td className="px-4 py-2">
-                      <Select
-                        options={options}
-                        onChange={(e) => { handleOptionChange(e); setSelectedPdf(pdf); }}
-                        placeholder="Actions"
-                      />
-                    </td>
-                  </tr>
+                  <TableRow key={pdf._id}>
+                    <TableCell>{pdf.authorName || ""}</TableCell>
+                    <TableCell>
+                      <Box display="flex" alignItems="center">
+                        <img src={pdfImage} alt="" style={{ width: 32, height: 32, marginRight: 8 }} />
+                        <a href={pdf.url} target="_blank" rel="noopener noreferrer">{pdf.name || ""}</a>
+                      </Box>
+                    </TableCell>
+                    <TableCell>
+                      {pdf.createdAt ? new Date(pdf.createdAt).toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' }) : ""}
+                    </TableCell>
+                    <TableCell>
+                      {pdf.size ? Math.floor((pdf.size / 1000)) : 0} KB
+                    </TableCell>
+                    <TableCell align="center">
+                      <IconButton onClick={(e) => handleActionClick(e, pdf)}>
+                        <MoreVertIcon />
+                      </IconButton>
+                    </TableCell>
+                  </TableRow>
                 ))}
-              </tbody>
-            </table>
-          </div>
-          {load && <Loading />}
-        </div>
-      </div>
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </Paper>
+        {load && <Loading />}
+      </Box>
 
-      <Modal viewModal={viewModal} setViewModal={setViewModal} pdf={selectedPdf}
-        selectedOption={selectedOption} />
-    </Fragment>
+      <Menu
+        anchorEl={actionAnchorEl}
+        open={Boolean(actionAnchorEl)}
+        onClose={handleActionClose}
+      >
+        <MenuItem onClick={() => handleActionSelect({ value: 'Access-Right', label: 'Access-Right' })}>
+          Access-Right
+        </MenuItem>
+        <MenuItem onClick={() => handleActionSelect({ value: 'Delete', label: 'Delete' })}>
+          Delete
+        </MenuItem>
+      </Menu>
+
+      <Modal
+        viewModal={viewModal}
+        setViewModal={setViewModal}
+        pdf={selectedPdf}
+        selectedOption={selectedAction}
+      />
+    </Container>
   );
 }
 

@@ -13,6 +13,7 @@ function Login() {
   })
   const { setToken } = useContext(AuthContext);
   const navigate = useNavigate();
+  const BE_URL=import.meta.env.VITE_BE_URL
 
 
   const handleChange = (e) => {
@@ -22,7 +23,7 @@ function Login() {
   const handleSubmit = async (e) => {
     try {
       e.preventDefault();
-      const response = await axios.post("http://localhost:3001/Login", inputValue)
+      const response = await axios.post(`${BE_URL}/Login`, inputValue)
       setToken(response.data.token);
       localStorage.setItem('token', response.data.token)
       navigate('/Display')

@@ -12,6 +12,7 @@ function Signup() {
     Lastname: "",
     password: "",
   })
+  const BE_URL=import.meta.env.VITE_BE_URL
 
   const navigate = useNavigate();
 
@@ -23,7 +24,7 @@ function Signup() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:3001/Signup', input);
+      const response = await axios.post(`${BE_URL}/Signup`, input);
       if (!response.data) {
         throw new Error("Cannot fetch data");
       } else {

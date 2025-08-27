@@ -51,7 +51,7 @@ router.post("/Login", async (req, res) => {
     res.status(200).send({ token })
   }
   else {
-    res.status(500).json({ msg: "Cannot login into the app" });
+    res.status(500).json({ msg: "Invalid email or password" });
     return;
   }
 });

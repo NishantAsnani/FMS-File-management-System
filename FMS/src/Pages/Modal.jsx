@@ -7,6 +7,7 @@ import toast, { Toaster } from 'react-hot-toast';
 function Modal({ viewModal, setViewModal, pdf, selectedOption }) {
     const [email, setEmail] = useState("");
     const { token } = useContext(AuthContext)
+    const BE_URL=import.meta.env.VITE_BE_URL
 
     const UpdateUI = (event) => {
         setEmail("")
@@ -16,7 +17,7 @@ function Modal({ viewModal, setViewModal, pdf, selectedOption }) {
         e.preventDefault();
         try {
             if (selectedOption.value === "Access-Right") {
-                const response = await axios.post("http://localhost:3001/pdf/giveAccess", { email, pdf }, {
+                const response = await axios.post(`${BE_URL}/pdf/giveAccess`, { email, pdf }, {
                     headers: {
                         Authorization: `${token}`
                     }
@@ -24,7 +25,7 @@ function Modal({ viewModal, setViewModal, pdf, selectedOption }) {
                 UpdateUI();
                 toast.success("Rights were given to the user mentioned");
             } else if (selectedOption.value === "Delete") {
-                await axios.post("http://localhost:3001/pdf/delete", { pdf }, {
+                await axios.post(`${BE_URL}/pdf/delete`, { pdf }, {
                     headers: {
                         Authorization: `${token}`
                     }
