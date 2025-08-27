@@ -18,8 +18,8 @@ app.use((req, res, next) => {
   next();
 });
 app.use(express.static(path.join(__dirname, "./public")));
-app.use('/', simpleRoutes); //simple route handler
-app.use('/pdf',pdfRoutes)  //pdf Routes handler
+app.use('/api', simpleRoutes); //simple route handler
+app.use('/api/pdf',pdfRoutes)  //pdf Routes handler
 
 
 
